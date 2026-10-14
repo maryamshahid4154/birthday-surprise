@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Happy Birthday, My Dearest Bhaiya</title>
+  <meta name="description" content="A cinematic birthday experience for my Bhaiya.">
+  <meta name="theme-color" content="#030817">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Fredoka:wght@600&family=Great+Vibes&family=Montserrat:wght@500;600;700&family=Open+Sans:wght@800&family=Noto+Nastaliq+Urdu:wght@400;600&family=Playfair+Display:ital,wght@0,700;0,800;1,600;1,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-ringtone-src="assets/audio/incoming-ringtone.mp3" data-music-src="assets/audio/birthday-song.mp3">
+
+  <!-- 0. INCOMING CALL OVERLAY (covers the site until answered) -->
+  <div class="call" id="call" role="dialog" aria-modal="true" aria-label="Incoming call from Birthday">
+    <div class="call__phone">
+      <button class="call__sound" id="callSound" type="button" aria-pressed="true" aria-label="Ringtone on. Press to mute."><svg class="on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9z" fill="currentColor"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg><svg class="off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9z" fill="currentColor"/><path d="M17 9l5 6M22 9l-5 6"/></svg></button>
+      <span class="call__sound-hint" id="callSoundHint">Tap anywhere for ringtone</span>
+      <header class="call__caller">
+        <h2 class="call__name">Birthday <span class="emoji">🎂</span></h2>
+        <p class="call__status" id="callStatus" aria-live="polite">is calling...</p>
+      </header>
+
+
+      <!-- INCOMING STATE -->
+      <div class="call__incoming" id="callIncoming">
+        <p class="call__month">October</p>
+        <div class="call__actions">
+          <button class="call__action" id="callRemind" type="button" aria-pressed="false">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="13" r="7"/><path d="M12 9v4l2.5 1.5M5 4 2.5 6.5M19 4l2.5 2.5"/></svg>
+            <span>Remind Me</span>
+          </button>
+          <button class="call__action" id="callMessage" type="button" aria-haspopup="dialog">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3C6.5 3 2 6.6 2 11c0 2.3 1.2 4.3 3.1 5.8L4 21l4.4-2.3c1.1.3 2.4.5 3.6.5 5.5 0 10-3.6 10-8s-4.5-8.2-10-8.2z"/></svg>
+            <span>Message</span>
+          </button>
+        </div>
+        <div class="call__slide" id="callSlide">
+          <span class="call__slide-text" aria-hidden="true">slide to answer</span>
+          <button class="call__thumb" id="callAnswer" type="button" aria-label="Answer call (slide right, or press Enter)">
+            <svg viewBox="0 0 24 24" fill="#1f9d3a" aria-hidden="true"><path d="M6.6 10.8a15 15 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.6a1 1 0 0 1-.25 1z"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- CONNECTED STATE (simulated — no real call, mic or camera) -->
+      <div class="call__live" id="callLive" tabindex="-1" hidden>
+        <div class="call__grid" id="callGrid">
+          <button class="call__ctl" type="button" data-ctl="mute" aria-pressed="false"><span class="call__ring"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3M4 4l16 16"/></svg></span><span>mute</span></button>
+          <button class="call__ctl" type="button" data-ctl="keypad"><span class="call__ring"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="5" cy="4" r="1.7"/><circle cx="12" cy="4" r="1.7"/><circle cx="19" cy="4" r="1.7"/><circle cx="5" cy="10" r="1.7"/><circle cx="12" cy="10" r="1.7"/><circle cx="19" cy="10" r="1.7"/><circle cx="5" cy="16" r="1.7"/><circle cx="12" cy="16" r="1.7"/><circle cx="19" cy="16" r="1.7"/><circle cx="12" cy="22" r="1.7"/></svg></span><span>keypad</span></button>
+          <button class="call__ctl" type="button" data-ctl="speaker" aria-pressed="false"><span class="call__ring"><svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9z"/><path fill="none" d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12"/></svg></span><span>speaker</span></button>
+          <button class="call__ctl" type="button" data-ctl="add"><span class="call__ring"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 4v16M4 12h16"/></svg></span><span>add call</span></button>
+          <button class="call__ctl" type="button" data-ctl="facetime"><span class="call__ring"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="2" y="6" width="13" height="12" rx="2.5"/><path d="M16.5 10.5 22 7v10l-5.5-3.5z"/></svg></span><span>FaceTime</span></button>
+          <button class="call__ctl" type="button" data-ctl="contacts"><span class="call__ring"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7z"/></svg></span><span>contacts</span></button>
+        </div>
+        <div class="call__keypad" id="callKeypad" hidden>
+          <output class="call__readout" id="callReadout" aria-live="polite">&nbsp;</output>
+          <div class="call__keys" id="callKeys"></div>
+          <button class="call__hide" id="callHideKeys" type="button">Hide</button>
+        </div>
+        <button class="call__end" id="callEnd" type="button" aria-label="End call (returns to the incoming call)">
+          <svg viewBox="0 0 24 24" fill="#fff" aria-hidden="true" style="transform:rotate(135deg)"><path d="M6.6 10.8a15 15 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.6a1 1 0 0 1-.25 1z"/></svg>
+        </button>
+        <button class="call__continue" id="callContinue" type="button" hidden>Open the surprise →</button>
+      </div>
+
+      <div class="call__toast" id="callToast" role="status" aria-live="polite"></div>
+
+      <!-- Message preview sheet (simulated, nothing is sent) -->
+      <div class="call__sheet" id="callSheet" role="dialog" aria-label="Message preview" hidden>
+        <p class="call__sheet-title">Message from Birthday 🎂</p>
+        <p class="call__bubble" id="callBubble" data-ur="سالگرہ مبارک بھیا! 🎂 جلدی سے کال اٹھائیں — آپ کی چھوٹی بہن کا خاص سرپرائز آپ کا انتظار کر رہا ہے! 🎁❤️">Happy Birthday, Bhaiya! 🎂 Jaldi se call uthayein — aapki little sister ka special surprise aapka intezaar kar raha hai! 🎁❤️</p>
+        <div class="call__sheet-btns">
+          <button class="call__sheet-btn" id="callSheetAnswer" type="button">Answer instead</button>
+          <button class="call__sheet-btn call__sheet-btn--ghost" id="callSheetClose" type="button">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <noscript><style>.call{display:none!important}</style></noscript>
+
+  <!-- 1. CINEMATIC INTRO (click / key / ~2s to skip) -->
+  <div class="intro" id="intro" role="presentation">
+    <span class="intro__dot"></span>
+    <span class="intro__crescent" aria-hidden="true"></span>
+    <p class="intro__text">A Little Something for You, Bhaiya ❤️</p>
+  </div>
+
+  <!-- Floating emoji/sparkle layer (decorative) -->
+  <div class="floaters" id="floaters" aria-hidden="true"></div>
+  <canvas class="confetti" id="confetti" aria-hidden="true"></canvas>
+
+  <main>
+
+    <!-- 2. HERO -->
+    <section class="hero section" id="home">
+      <div class="hero__glow hero__glow--blue" aria-hidden="true"></div>
+      <div class="hero__glow hero__glow--gold" aria-hidden="true"></div>
+      <div class="hero__inner">
+        <p class="eyebrow reveal" style="--d:.1s">Celebrating My Best Brother <span class="emoji">👑</span></p>
+        <h1 class="hero__title">
+          <span class="hero__line hero__line--blue reveal" style="--d:.2s">Happy</span>
+          <span class="hero__line hero__line--gold reveal" style="--d:.35s">Birthday</span>
+          <span class="hero__script reveal" style="--d:.5s"><span id="heroName">My Dearest Bhaiya</span> <span class="emoji">👑❤️</span></span>
+        </h1>
+        <p class="hero__tag reveal" style="--d:.65s" data-ur="بہترین بھائی اور میرا ہمیشہ کا محافظ 🤍✨">The Best Brother &amp; My Forever Protector <span class="emoji">🤍✨</span></p>
+        <p class="hero__type reveal" style="--d:.8s">
+          <span id="typewriter"
+                data-lines-ur="اُس کے نام جو میرے لیے بہت اہم ہے، صرف میرے بڑے بھائی کے طور پر نہیں بلکہ ایک ایسی شخصیت کے طور پر جسے میں ہمیشہ اپنا آئیڈیل مانوں گی|اپنی زندگی کے سب سے خاص بھائی کا جشن|اُس کے نام جو ہر یاد کو ناقابلِ فراموش اور ہر خاندانی لمحے کو مزید خوبصورت بنا دیتا ہے۔"
+                data-lines="To the one who means so much to me, not just as my elder brother but as someone I will always look up to|Celebrating the most special brother in my life|To the one who makes every memory unforgettable and every family moment more beautiful.">To the one who makes every memory unforgettable and every family moment more beautiful.</span><span class="caret" aria-hidden="true"></span>
+        </p>
+        <button class="btn btn--blue reveal" style="--d:.95s" id="openSurprise" type="button" aria-haspopup="dialog">
+          <span class="emoji">🎁</span> Open your surprise <span aria-hidden="true">→</span>
+        </button>
+        <a class="hero__scroll" href="#letter" aria-label="Scroll down">Scroll<span></span></a>
+      </div>
+    </section>
+
+    <!-- Marquee band -->
+    <div class="band band--single" aria-hidden="true">
+      <div class="band__track" data-marquee>
+        <span>Happy Birthday, Bhaiya 🎂</span><span>My Best Brother 👑</span><span>Forever Your Little Sister ❤️</span><span>My Forever Protector 🤍</span><span>Endless Duas for You 🤲</span><span>Best Bhaiya Ever ✨</span>
+      </div>
+    </div>
+
+    <!-- 6. PERSONAL MESSAGE -->
+    <section class="letter section" id="letter">
+      <article class="letter__col reveal">
+        <p class="letter__p letter__p--lead" data-ur="کبھی کبھی ہم وہ باتیں نہیں کہہ پاتے جو دل میں ہوتی ہیں، لیکن آج میں وہ سب کہنا چاہتی ہوں جو اب تک کہہ نہیں سکی، کیونکہ اس سے واقعی دل ہلکا ہو جاتا ہے۔">Kabhi kabhi hum woh baatein nahi bol paate jo dil mein hoti hain, but today I want to express the unexpressed because it truly feels lighter.</p>
+        <p class="letter__p" id="birthdayMessage" data-ur="آپ کے خوابوں کی تکمیل، نئی مہمّات اور ان گنت خوبصورت یادوں سے بھرے ایک اور سال کے نام۔ مجھے آپ جیسا بھیا ملنے پر شکر ادا کرنے کی ہزاروں وجوہات ہیں۔ یہ سال آپ کے لیے خوشی، کامیابی، اچھی صحت، سکون اور وہ سب کچھ لے کر آئے جو آپ کا دل چاہتا ہے۔ میرے پیارے بھائی، میرے رہنما اور میرے ہمیشہ کے سہارے کو سالگرہ مبارک ہو۔">Here's to another year of achieving your dreams, exploring new adventures, and making countless beautiful memories. I have a thousand reasons to be grateful for having you as my Bhaiya. May this year bring you happiness, success, good health, peace, and everything your heart wishes for. Happy Birthday to my wonderful brother, my guide, and my forever source of support.</p>
+        <p class="letter__p" data-ur="ہمیشہ یاد رکھیں بھیا: مثبت رہیں، خود بھی مسکراتے رہیں اور اپنے آس پاس کے لوگوں کی خوشی کی وجہ بھی بنتے رہیں۔ آپ میں ایک ایسی سچی اور مثبت توانائی ہے جو اردگرد کے لوگوں کو خوش اور پُرسکون کر دیتی ہے۔">Always remember, Bhaiya: positive rehna, khud bhi muskurate rehna aur apne aas-paas ke logon ki khushi ki wajah bhi bante rehna. You carry such a genuine, positive vibe that makes the people around you feel happier and more comfortable.</p>
+        <p class="letter__p" data-ur="زندگی ہمیں جہاں بھی لے جائے، یاد رکھیں کہ آپ کی چھوٹی بہن ہمیشہ آپ کا ساتھ دے گی، آپ کے لیے دعا کرے گی اور آپ کی ہر چھوٹی بڑی کامیابی کا جشن منائے گی۔ بھیا، میرے دل میں آپ کی جگہ ہمیشہ خاص رہے گی۔ ❤️">No matter where life takes us, remember that your little sister will always be there to support you, pray for you, and celebrate every little and big achievement of yours. You'll always have a special place in my heart, Bhaiya. <span class="emoji">❤️</span></p>
+        <p class="eyebrow eyebrow--small">My only wish</p>
+        <blockquote class="letter__quote" data-ur="“اپنے پیاروں سے وہ باتیں کہہ دیں جو دل میں ہیں… کیونکہ کبھی کبھی دل کی بات کہہ دینے سے سب کچھ ہلکا ہو جاتا ہے۔”">“Express the unexpressed to your loved ones… because sometimes, saying what's in your heart makes everything feel lighter.”</blockquote>
+        <p class="letter__sign" data-ur="ہمیشہ آپ کی چھوٹی بہن، اور ہمیشہ آپ کی سب سے بڑی حمایتی! ❤️🤍✨">Forever Your Little Sister, Always Your Biggest Supporter! <span class="emoji">❤️🤍✨</span></p>
+      </article>
+    </section>
+
+    <!-- 4. MEMORIES / DIAGONAL GALLERY -->
+    <section class="moments section" id="moments">
+      <header class="section__head reveal">
+        <p class="chip">✦ Diagonal photo gallery ✦</p>
+        <h2 class="h2"><em class="blue">Cherished</em> <em class="gold">Moments</em></h2>
+        <p class="sub" data-ur="حرکت روکنے کے لیے ماؤس اوپر لائیں، کسی بھی تصویر پر کلک کر کے بڑا کریں…">Hover to pause motion, click any photo to enlarge…</p>
+      </header>
+      <div class="diag" aria-label="Photo gallery">
+        <div class="diag__stage">
+          <!-- Edit images here. Each .photo opens the same picture in the viewer. -->
+          <div class="diag__row diag__row--a" data-marquee>
+            <button class="photo" type="button" aria-label="Open photo 1"><img src="assets/images/image1.jpeg" alt="Cherished moment photo 1" loading="lazy"></button>
+            <button class="photo" type="button" aria-label="Open photo 2"><img src="assets/images/image2.jpeg" alt="Cherished moment photo 2" loading="lazy"></button>
+            <button class="photo" type="button" aria-label="Open photo 3"><img src="assets/images/image4.jpeg" alt="Cherished moment photo 3" loading="lazy"></button>
+          </div>
+          <div class="diag__row diag__row--b" data-marquee>
+            <button class="photo" type="button" aria-label="Open photo 4"><img src="assets/images/image5.jpeg" alt="Cherished moment photo 4" loading="lazy"></button>
+            <button class="photo" type="button" aria-label="Open photo 5"><img src="assets/images/image6.jpeg" alt="Cherished moment photo 5" loading="lazy"></button>
+            <button class="photo" type="button" aria-label="Open photo 6"><img src="assets/images/image3.jpeg" alt="Cherished moment photo 6" loading="lazy"></button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. BROTHERHOOD MILESTONES — COVERFLOW -->
+    <section class="deck section" id="milestones">
+      <header class="section__head reveal">
+        <p class="chip">✦ Brotherhood coverflow deck ✦</p>
+        <h2 class="h2"><em class="blue">Brotherhood</em> <em class="gold">Milestones</em></h2>
+        <p class="sub" data-ur="ہمارے بھائی چارے کے سفر کو دیکھنے کے لیے تصاویر کو کھینچیں، کارڈز پر کلک کریں یا تیر والے بٹن استعمال کریں…">Drag horizontally, click cards or use arrow controls to explore our epic brotherhood timeline…</p>
+      </header>
+      <div class="deck__wrap reveal">
+        <button class="deck__arrow deck__arrow--prev" id="deckPrev" type="button" aria-label="Previous memory">‹</button>
+        <div class="deck__stage" id="deckStage" tabindex="0" aria-roledescription="carousel" aria-label="Brotherhood milestones">
+          <figure class="card3d" data-index="0" data-no="01 // Partners in crime" data-title="Unforgettable Memories" data-sub="Every smile, every moment" data-quote-ur="زندگی کی کچھ سب سے خوبصورت یادیں بغیر منصوبہ بندی کے بنتی ہیں — بے تکی باتوں، بے انتہا ہنسی، چھوٹی چھوٹی مہمّات اور آپ کے ساتھ بیتے ناقابلِ فراموش لمحوں سے، بھیا۔" data-quote="Some of life's most beautiful memories are made without planning — through silly conversations, endless laughter, little adventures, and unforgettable moments with you, Bhaiya."><img src="assets/images/milestone-01.jpg" alt="Collage of photos of my brother" loading="lazy"><span class="card3d__no">01</span></figure>
+          <figure class="card3d" data-index="1" data-no="02 // Family first" data-title="Family Moments" data-sub="The people who matter most" data-quote-ur="گھر وہیں ہے جہاں میرا خاندان ہے — محبت، ہنسی، بے شمار دعاؤں اور خوبصورت یادوں سے بھرا ہوا۔ آپ جیسا بھیا ہونے سے یہ رشتہ اور بھی خاص ہو جاتا ہے۔" data-quote="Home is wherever my family is — filled with love, laughter, endless duas, and beautiful memories. Having you as my Bhaiya makes this bond even more special."><img src="assets/images/milestone-02.jpg" alt="Family photos together" loading="lazy"><span class="card3d__no">02</span></figure>
+          <figure class="card3d" data-index="2" data-no="03 // His favourite" data-title="A Burger for My Bhaiya" data-sub="Because he loves it the most" data-quote-ur="کچھ لوگوں کو گلاب پسند ہوتے ہیں، کچھ کو چاکلیٹ، لیکن میرا بھیا اپنے پسندیدہ برگر کا حق دار ہے! آپ کی چھوٹی بہن کی طرف سے ایک چھوٹی سی ٹریٹ، ڈھیر سارے پیار اور سالگرہ کی دعاؤں کے ساتھ۔ 🍔❤️" data-quote="Some people love roses, some love chocolates, but my Bhaiya deserves his favourite burger! A little treat from your little sister, with lots of love and birthday wishes. 🍔❤️"><img src="assets/images/milestone-03.jpg" alt="A burger with fries on a wooden tray" loading="lazy"><span class="card3d__no">03</span></figure>
+        </div>
+        <button class="deck__arrow deck__arrow--next" id="deckNext" type="button" aria-label="Next memory">›</button>
+      </div>
+      <div class="deck__caption" id="deckCaption" aria-live="polite">
+        <p class="deck__no" id="deckNo"></p>
+        <h3 class="deck__title" id="deckTitle"></h3>
+        <p class="deck__sub" id="deckSub"></p>
+        <p class="deck__quote" id="deckQuote"></p>
+        <div class="dots" id="deckDots"></div>
+      </div>
+    </section>
+
+    <!-- Kinetic text -->
+    <section class="kinetic" id="kinetic" aria-label="From day one, you have been so much more than just my elder brother — my guide, my support, and someone I will always look up to. A bond beyond words.">
+      <div class="kinetic__inner" aria-hidden="true">
+        <div class="kinetic__big" data-wave>Bhaiya</div>
+        <div class="kinetic__line" data-wave>From day one, you have been</div>
+        <div class="kinetic__line" data-wave>so much more than just my elder brother —</div>
+        <div class="kinetic__line" data-wave>my guide, my support, and someone</div>
+        <div class="kinetic__line" data-wave>I will always look up to.</div>
+        <div class="kinetic__line" data-wave>Every laugh, every little moment,</div>
+        <div class="kinetic__line" data-wave>every memory we share means so much.</div>
+        <div class="kinetic__line" data-wave>I am always praying for your happiness</div>
+        <div class="kinetic__line" data-wave>and cheering for your success, Bhaiya!</div>
+        <div class="kinetic__line" data-wave>Your Little Sister, Forever &amp; Always ❤️</div>
+        <div class="kinetic__line kinetic__line--end" data-wave>A Bond Beyond Words…</div>
+      </div>
+      <!-- Urdu version (shown only after "Translate to Urdu") -->
+      <p class="kinetic__urdu" aria-hidden="true">پہلے دن سے ہی آپ میرے بڑے بھائی سے کہیں بڑھ کر رہے ہیں — میرے رہنما، میرا سہارا، اور وہ جسے میں ہمیشہ اپنا آئیڈیل مانوں گی۔ ہر ہنسی، ہر چھوٹا سا لمحہ، ہر مشترکہ یاد میرے لیے بہت معنی رکھتی ہے۔ میں ہمیشہ آپ کی خوشی کی دعا کرتی ہوں اور آپ کی کامیابی کے لیے پرجوش ہوں، بھیا! <span class="kinetic__urdu-end">آپ کی چھوٹی بہن، ہمیشہ اور ہمیشہ ❤️ — الفاظ سے بڑھ کر ایک رشتہ…</span></p>
+    </section>
+
+    <!-- WHY YOU -->
+    <section class="why section" id="why">
+      <header class="section__head reveal">
+        <p class="chip">✦ Brotherhood vault ✦</p>
+        <h2 class="h2 h2--xl"><em class="blue">Why You Are</em> <em class="gold">My Best Brother</em></h2>
+        <p class="sub" data-ur="ہر وہ وجہ جو آپ کو میری نظروں میں سب سے خاص بھیا بناتی ہے… ✨">Har ek wajah jo aapko meri nazron mein sabse khaas Bhaiya banati hai… <span class="emoji">✨</span></p>
+      </header>
+      <div class="why__grid">
+        <article class="why__card reveal"><span class="why__no">01</span><span class="why__icon emoji">🛡️</span><h3>Always There for Me</h3><p data-ur="ہر مشکل لمحے اور ہر چھوٹی پریشانی میں۔ «بھیا، آپ کا ساتھ اور سپورٹ میرے لیے بہت خاص ہے۔ اللہ آپ کو ہمیشہ خوش اور سلامت رکھے۔»">Through every difficult moment and every little worry. "Bhaiya, aapka saath aur support mere liye bohat special hai. Allah aapko hamesha khush aur salamat rakhe."</p></article>
+        <article class="why__card reveal" style="--d:.1s"><span class="why__no">02</span><span class="why__icon emoji">💎</span><h3>Pure Authenticity</h3><p data-ur="کوئی دکھاوا نہیں، بس ایک سچا دل اور خوبصورت شخصیت۔ «آپ جیسے سچے اور دل کے اچھے لوگ بہت خاص ہوتے ہیں۔ اللہ آپ کی ہر اچھائی کا خوبصورت صلہ دے!»">No fake vibes, just a genuine heart and a beautiful personality. "Aap jaise sachhe aur dil ke achhe log bohat khaas hote hain. Allah aapki har achhai ka khoobsurat sila de!"</p></article>
+        <article class="why__card reveal" style="--d:.2s"><span class="why__no">03</span><span class="why__icon emoji">🍻</span><h3>A Lifetime of Memories</h3><p data-ur="مزے دار باتیں، چھوٹی چھوٹی مہمّات اور ایسے لمحات جنہیں میں ہمیشہ سنبھال کر رکھوں گی۔ «بھیا، آپ کے ساتھ چھوٹی چھوٹی باتیں بھی یادگار بن جاتی ہیں۔ دعا ہے ہم ہمیشہ ایسے ہی خوشیاں بانٹتے رہیں۔»">Funny conversations, little adventures, and moments I'll always treasure. "Bhaiya, aapke saath chhoti chhoti baatein bhi yaadgar ban jaati hain. Dua hai hum hamesha aise hi khushiyan share karte rahein."</p></article>
+        <article class="why__card reveal" style="--d:.3s"><span class="why__no">04</span><span class="why__icon emoji">⚡</span><h3>Your Beautiful Positive Energy</h3><p data-ur="آپ اپنے آس پاس کے لوگوں کے لیے خوشی اور مسکراہٹیں لاتے ہیں۔ «آپ کی مسکراہٹ ہمیشہ قائم رہے، اور آپ ہمیشہ دوسروں کی خوشی کی وجہ بنتے رہیں۔ اللہ آپ کو ڈھیر ساری خوشیاں دے۔» ✨">You bring happiness and smiles to the people around you. "Aapki muskurahat hamesha qayam rahe, aur aap hamesha doosron ki khushi ki wajah bante rahein. Allah aapko dher saari khushiyan de." ✨</p></article>
+        <article class="why__card reveal" style="--d:.4s"><span class="why__no">05</span><span class="why__icon emoji">👑</span><h3>A Truly Wonderful Person</h3><p data-ur="صرف اس لیے نہیں کہ آپ کیا حاصل کرتے ہیں، بلکہ اس لیے کہ آپ کیسے انسان ہیں، آپ کی اقدار، اور آپ کے دل کی نیکی۔ «میرے لیے آپ کی سب سے خوبصورت بات آپ کا اچھا دل اور آپ کی اچھی سوچ ہے۔ اللہ آپ کو عزت، سکون، کامیابی اور ہمیشہ نیک لوگوں کا ساتھ نصیب کرے۔» 👑">Not just because of what you achieve, but because of the person you are, your values, and the kindness you carry in your heart. "Mere liye aapki sabse khoobsurat baat aapka achha dil aur aapki achhi soch hai. Allah aapko izzat, sukoon, kamyabi aur hamesha nek logon ka saath naseeb kare." 👑</p></article>
+      </div>
+    </section>
+
+    <!-- STATS -->
+    <section class="stats section" id="stats">
+      <header class="section__head reveal">
+        <p class="chip">✦ By the numbers ✦</p>
+        <h2 class="h2"><em class="blue">Brotherhood</em> <em class="gold">Milestones</em> <span class="emoji">⚡</span></h2>
+        <p class="sub" data-ur="ایک ناقابلِ فراموش بھائی چارے کی پیمائش">Measuring an unforgettable brotherhood</p>
+        <span class="rule" aria-hidden="true"></span>
+      </header>
+      <div class="stats__grid">
+        <div class="stat reveal"><span class="stat__icon emoji">⚡</span><p class="stat__num"><span data-count="362">362</span>+</p><p class="stat__label">Days of unforgettable<br>memories</p></div>
+        <div class="stat reveal" style="--d:.1s"><span class="stat__icon emoji">😂</span><p class="stat__num"><span data-count="993">993</span>+</p><p class="stat__label">Inside jokes, laughs<br>&amp; silly moments</p></div>
+        <div class="stat reveal" style="--d:.2s"><span class="stat__icon emoji">🤝</span><p class="stat__num">∞</p><p class="stat__label">Years of love<br>and sibling bond</p></div>
+        <div class="stat reveal" style="--d:.3s"><span class="stat__icon emoji">👑</span><p class="stat__num"><span data-count="1">1</span></p><p class="stat__label">Incredibly special<br>Bhaiya</p></div>
+      </div>
+      <p class="forever"><span>✦ Always &amp; Forever — Your Proud Little Sister ❤️ ✦</span></p>
+    </section>
+
+    <!-- 7. BURGER — tap anywhere on it to take a bite -->
+    <section class="burger section" id="celebrate">
+      <header class="section__head reveal">
+        <h2 class="h2 h2--script">A Little Treat From Your Little Sister <span class="emoji">🍔❤️</span></h2>
+        <p class="sub" data-ur="کیونکہ میرا بھیا اپنے خاص دن پر اپنی پسندیدہ ٹریٹ کا حق دار ہے!">Because my Bhaiya deserves his favourite treat on his special day!</p>
+        <span class="rule rule--gold" aria-hidden="true"></span>
+      </header>
+      <div class="burger__stage reveal">
+        <div class="burger__glow" aria-hidden="true"></div>
+        <div class="burger__bob">
+          <canvas class="burger__canvas" id="burgerCanvas" width="840" height="720" role="button" tabindex="0" aria-label="Burger. Tap to eat."></canvas>
+        </div>
+        <!-- Shown instead of a new burger once the burger is finished -->
+        <div class="burger__done" id="burgerDone" aria-live="polite" hidden>
+          <p class="burger__done-top">Surprise! Happy</p>
+          <p class="burger__done-main">Birthday, Bhaiya! <span class="emoji">🎂❤️</span></p>
+        </div>
+      </div>
+      <p class="burger__label" id="burgerLabel">Tap to eat</p>
+      <p class="sub reveal" data-ur="آپ کا پسندیدہ برگر، میری طرف سے ڈھیر سارا پیار اور آپ کے لیے بہت ساری دعائیں۔ بھیا، اپنے چھوٹے سے سالگرہ کے سرپرائز کا مزہ لیں!">Aapka favourite burger, meri taraf se dher saara pyaar, aur aapke liye bohat saari duaein. Enjoy your little birthday surprise, Bhaiya!</p>
+    </section>
+
+    <!-- Double banner -->
+    <div class="band band--double" aria-hidden="true">
+      <div class="band__row band__row--top"><div class="band__track band__track--big" data-marquee><span>Happy Birthday, My Dearest Bhaiya 🚀</span><span>Happy Birthday, My Dearest Bhaiya 🚀</span><span>Happy Birthday, My Dearest Bhaiya 🚀</span></div></div>
+      <div class="band__row band__row--bottom"><div class="band__track band__track--script" data-marquee data-reverse><span>My Best Brother 👑</span><span>Always Proud of You ❤️</span><span>May All Your Dreams Come True ✨</span></div></div>
+    </div>
+
+    <!-- 8. FINAL -->
+    <section class="final section" id="final">
+      <div class="final__glow" aria-hidden="true"></div>
+      <p class="eyebrow eyebrow--small reveal">Brothers Forever, A Bond for a Lifetime <span class="emoji">❤️</span></p>
+      <h2 class="final__title reveal" id="finalTitle">Happy Birthday,<br>My Best Brother! <span class="emoji">👑🎂</span></h2>
+      <span class="rule" aria-hidden="true"></span>
+      <p class="final__script reveal" data-ur="آپ کے لیے ایک ایسا سال جو بے پایاں خوشیوں، خوبصورت یادوں، کامیابی، اچھی صحت اور مسکرانے کی ان گنت وجوہات سے بھرا ہو۔">Wishing you a year filled with endless happiness, beautiful memories, success, good health, and countless reasons to smile.</p>
+      <p class="final__script reveal" data-ur="اللہ ہمیشہ آپ کی حفاظت فرمائے، آپ کے ہر قدم پر برکت دے، آپ کے خواب پورے کرے اور آپ کی زندگی کو سکون، محبت اور برکت سے بھر دے۔ آمین۔ 🤲">May Allah always protect you, bless your every step, make your dreams come true, and fill your life with peace, love, and barakah. Ameen. <span class="emoji">🤲</span></p>
+      <button class="btn btn--blue reveal" id="launchBtn" type="button"><span class="emoji">🎉</span> Launch grand celebration!</button>
+      <p class="final__foot">Brothers Forever <span class="emoji">🤝</span><br><small>Crafted with love, respect, endless duas &amp; a little sister's whole heart. © 2026</small></p>
+    </section>
+
+    <!-- 9. VIDEO — put your video at assets/video/birthday-video.mp4 -->
+    <section class="video section" id="video">
+      <header class="section__head reveal">
+        <p class="chip">✦ A special video ✦</p>
+        <h2 class="h2"><em class="blue">Watch</em> <em class="gold">This One</em></h2>
+        <span class="rule" aria-hidden="true"></span>
+      </header>
+      <a class="btn btn--gold video__dl reveal" id="videoDownload" href="assets/video/birthday-video.mp4" download="Birthday-Video.mp4">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0-5-5m5 5 5-5M4 20h16"/></svg>
+        Download video
+      </a>
+      <div class="video__frame reveal" id="videoFrame">
+        <video id="giftVideo" controls playsinline preload="metadata">
+          <source src="assets/video/birthday-video.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+        <p class="video__empty" id="videoEmpty" hidden>Video coming soon… <span class="emoji">🎬</span></p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- LETTER DIALOG -->
+  <dialog class="modal" id="letterModal" aria-labelledby="modalTitle">
+    <button class="modal__close" type="button" id="modalClose" aria-label="Close letter">✕</button>
+    <div class="modal__gift emoji" aria-hidden="true">🎁</div>
+    <p class="chip chip--gold">✦ Express the Unexpressed… It Feels Lighter ❤️ ✦</p>
+    <h2 class="modal__title" id="modalTitle">Dil Se Dua for You, Bhaiya <span class="emoji">👑</span></h2>
+    <div class="modal__box">
+      <p data-ur="«دل سے دعا ہے کہ اللہ آپ کی زندگی کو ہمیشہ خوشیوں، اچھی صحت، سکون، کامیابی اور بے شمار مسکراہٹوں سے بھرا رکھے۔ آپ جو بھی اچھے خواب دیکھیں، اللہ انہیں ایک ایک کر کے خوبصورتی سے پورا کرے۔ ہر مشکل کو آسان کرے اور آپ کو ہمیشہ اپنی حفاظت میں رکھے۔ آمین۔» 🤲">"Dil se dua hai ke Allah aapki life hamesha khushiyon, achhi health, sukoon, success aur endless smiles se bhari rakhe. Aap jo bhi achhe sapne dekhein, Allah unhein ek ek karke khoobsurati se poora kare. Har mushkil ko aasaan kare aur aapko hamesha apni hifazat mein rakhe. Ameen." <span class="emoji">🤲</span></p>
+      <p class="gold-i" data-ur="«مثبت رہیں، خود بھی مسکراتے رہیں اور اپنے آس پاس کے لوگوں کی خوشی کی وجہ بھی بنتے رہیں۔ آپ کی خوشی میرے لیے بہت اہم ہے بھیا، اور میں ہمیشہ آپ کے لیے دعا کرتی رہوں گی۔»">"Positive rehna, khud bhi muskurate rehna aur apne aas-paas ke logon ki khushi ki wajah bhi bante rehna. Aapki khushi mere liye bohat important hai, Bhaiya, aur main hamesha aapke liye dua karti rahungi."</p>
+      <p class="modal__big">Happy Birthday, My Best Brother! <span class="emoji">🚀❤️</span></p>
+      <p data-ur="ڈھیر سارے پیار کے ساتھ،<br>آپ کی چھوٹی بہن 🤍">With all my love,<br>Your Little Sister <span class="emoji">🤍</span></p>
+    </div>
+    <p class="modal__emojis emoji" aria-hidden="true">⚡🍻👑🔥🤝🏆</p>
+    <button class="btn btn--blue btn--sm" id="modalContinue" type="button">Read the full letter ↓</button>
+  </dialog>
+
+  <!-- IMAGE VIEWER -->
+  <dialog class="viewer" id="viewer" aria-label="Photo viewer">
+    <button class="viewer__close" type="button" id="viewerClose" aria-label="Close photo">✕</button>
+    <figure class="viewer__fig">
+      <img id="viewerImg" src="" alt="">
+      <figcaption><strong id="viewerTitle"></strong><span class="photo__chip">✦ Cherished moment ✦</span></figcaption>
+    </figure>
+  </dialog>
+
+  <!-- Birthday song controls (shown once the call is answered) -->
+  <div class="music" id="music" hidden>
+    <span class="music__note" id="musicNote" role="status" hidden>Add assets/audio/birthday-song.mp3 to play music</span>
+    <button class="music__btn" id="musicPlay" type="button" aria-pressed="false" aria-label="Play birthday song"><svg class="on" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg><svg class="off" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></button>
+    <button class="music__btn" id="musicMute" type="button" aria-pressed="true" aria-label="Mute birthday song"><svg class="on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9z" fill="currentColor"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg><svg class="off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9z" fill="currentColor"/><path d="M17 9l5 6M22 9l-5 6"/></svg></button>
+  </div>
+
+  <!-- LANGUAGE TOGGLE (side tab) — translates only paragraph text, not headings -->
+  <button class="lang-tab" id="langTab" type="button" aria-pressed="false">
+    <span class="lang-tab__text" data-label-en="Translate to Urdu" data-label-ur="Show in English">Translate to Urdu</span>
+  </button>
+
+  <script src="script.js"></script>
+</body>
+</html>
